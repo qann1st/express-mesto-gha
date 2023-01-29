@@ -37,6 +37,7 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true, runValidators: true },
   )
+    .populate('likes owner')
     .then((card) => res.send(card))
     .catch(() => {
       res.status(400).send({ error: 'Не удалось поставить лайк' });
