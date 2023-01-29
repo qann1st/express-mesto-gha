@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   owner: {
-    type: String,
+    type: Object,
   },
   likes: {
     type: Array,

@@ -6,7 +6,7 @@ module.exports.getUsers = (req, res) => {
       res.send(users);
     })
     .catch(() => {
-      res.status(500).send({ error: "Список пользователей пуст" });
+      res.status(404).send({ error: "Список пользователей пуст" });
     });
 };
 
@@ -16,7 +16,7 @@ module.exports.getUser = (req, res) => {
       res.send(user);
     })
     .catch(() => {
-      res.status(500).send({ error: "Пользователь не найден" });
+      res.status(404).send({ error: "Пользователь не найден" });
     });
 };
 
@@ -28,6 +28,26 @@ module.exports.createUser = (req, res) => {
       res.send(user);
     })
     .catch(() => {
-      res.status(500).send({ error: "Не удалось создать пользователя" });
+      res.status(400).send({ error: "Не удалось создать пользователя" });
+    });
+};
+
+module.exports.editUser = (req, res) => {
+  User.findByIdAndUpdate(req.params.id, req.body)
+    .then((editedUser) => {
+      res.send(editedUser);
+    })
+    .catch(() => {
+      res.status(400).send({ error: "Не удалось изменить пользователя" });
+    });
+};
+
+module.exports.editAvatar = (req, res) => {
+  User.findByIdAndUpdate(req.params.id, req.body)
+    .then((editedAvatar) => {
+      res.send(editedAvatar);
+    })
+    .catch(() => {
+      res.status(400).send({ error: "Не удалось изменить аватар" });
     });
 };
