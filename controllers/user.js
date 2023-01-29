@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -6,7 +6,7 @@ module.exports.getUsers = (req, res) => {
       res.send(users);
     })
     .catch(() => {
-      res.status(404).send({ error: "Список пользователей пуст" });
+      res.status(404).send({ error: 'Список пользователей пуст' });
     });
 };
 
@@ -16,7 +16,7 @@ module.exports.getUser = (req, res) => {
       res.send(user);
     })
     .catch(() => {
-      res.status(404).send({ error: "Пользователь не найден" });
+      res.status(404).send({ error: 'Пользователь не найден' });
     });
 };
 
@@ -28,7 +28,7 @@ module.exports.createUser = (req, res) => {
       res.send(user);
     })
     .catch(() => {
-      res.status(400).send({ error: "Не удалось создать пользователя" });
+      res.status(400).send({ error: 'Не удалось создать пользователя' });
     });
 };
 
@@ -38,7 +38,7 @@ module.exports.editUser = (req, res) => {
       res.send(editedUser);
     })
     .catch(() => {
-      res.status(400).send({ error: "Не удалось изменить пользователя" });
+      res.status(400).send({ error: 'Не удалось изменить пользователя' });
     });
 };
 
@@ -48,6 +48,6 @@ module.exports.editAvatar = (req, res) => {
       res.send(editedAvatar);
     })
     .catch(() => {
-      res.status(400).send({ error: "Не удалось изменить аватар" });
+      res.status(400).send({ error: 'Не удалось изменить аватар' });
     });
 };

@@ -1,4 +1,4 @@
-const Cards = require("../models/cards");
+const Cards = require('../models/cards');
 
 module.exports.getCards = (req, res) => {
   Cards.find({})
@@ -6,7 +6,7 @@ module.exports.getCards = (req, res) => {
       res.send(cards);
     })
     .catch(() => {
-      res.status(400).send({ error: "Список карточек пуст" });
+      res.status(400).send({ error: 'Список карточек пуст' });
     });
 };
 
@@ -17,7 +17,7 @@ module.exports.createCard = (req, res) => {
       res.send(cards);
     })
     .catch(() => {
-      res.status(500).send({ error: "Не удалось добавить карточку" });
+      res.status(500).send({ error: 'Не удалось добавить карточку' });
     });
 };
 
@@ -27,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
       res.send(removedCard);
     })
     .catch(() => {
-      res.status(400).send({ error: "Не удалось удалить карточку" });
+      res.status(400).send({ error: 'Не удалось удалить карточку' });
     });
 };
 
@@ -35,11 +35,11 @@ module.exports.likeCard = (req, res) => {
   Cards.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => res.send(card))
     .catch(() => {
-      res.status(400).send({ error: "Не удалось поставить лайк" });
+      res.status(400).send({ error: 'Не удалось поставить лайк' });
     });
 };
 
@@ -47,10 +47,10 @@ module.exports.deleteLikeCard = (req, res) => {
   Cards.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => res.send(card))
     .catch(() => {
-      res.status(400).send({ error: "Не удалось убрать лайк" });
+      res.status(400).send({ error: 'Не удалось убрать лайк' });
     });
 };
