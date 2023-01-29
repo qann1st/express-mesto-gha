@@ -33,7 +33,7 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.editUser = (req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body)
+  User.findByIdAndUpdate(req.params.id, req.body, { runValidators: true })
     .then((editedUser) => {
       res.send(editedUser);
     })
@@ -43,7 +43,7 @@ module.exports.editUser = (req, res) => {
 };
 
 module.exports.editAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body)
+  User.findByIdAndUpdate(req.params.id, req.body, { runValidators: true })
     .then((editedAvatar) => {
       res.send(editedAvatar);
     })
