@@ -6,7 +6,7 @@ module.exports.getCards = (req, res) => {
       res.send(cards);
     })
     .catch(() => {
-      res.status(400).send({ error: 'Список карточек пуст' });
+      res.status(400).send({ message: 'Список карточек пуст' });
     });
 };
 
@@ -17,7 +17,7 @@ module.exports.createCard = (req, res) => {
       res.send(cards);
     })
     .catch(() => {
-      res.status(500).send({ error: 'Не удалось добавить карточку' });
+      res.status(500).send({ message: 'Не удалось добавить карточку' });
     });
 };
 
@@ -27,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
       res.send(removedCard);
     })
     .catch(() => {
-      res.status(400).send({ error: 'Не удалось удалить карточку' });
+      res.status(400).send({ message: 'Не удалось удалить карточку' });
     });
 };
 
@@ -40,7 +40,7 @@ module.exports.likeCard = (req, res) => {
     .populate('likes owner')
     .then((card) => res.send(card))
     .catch(() => {
-      res.status(400).send({ error: 'Не удалось поставить лайк' });
+      res.status(400).send({ message: 'Не удалось поставить лайк' });
     });
 };
 
@@ -52,6 +52,6 @@ module.exports.deleteLikeCard = (req, res) => {
   )
     .then((card) => res.send(card))
     .catch(() => {
-      res.status(400).send({ error: 'Не удалось убрать лайк' });
+      res.status(400).send({ message: 'Не удалось убрать лайк' });
     });
 };
