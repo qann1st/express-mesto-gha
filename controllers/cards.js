@@ -12,11 +12,12 @@ module.exports.getCards = (req, res) => {
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
+
   Cards.create({ name, link, owner: { _id: req.user._id } })
     .then((cards) => {
       res.send(cards);
     })
-    .catch(() => {
+    .catch((err) => {
       res.status(400).send({ message: 'Некорректно заполнены поля' });
     });
 };
@@ -38,9 +39,15 @@ module.exports.likeCard = (req, res) => {
     { new: true, runValidators: true },
   )
     .populate('likes owner')
-    .then((card) => res.send(card))
-    .catch(() => {
-      res.status(400).send({ message: 'Карточка не найдена' });
+    .then((card) => {
+      if (card.id === req.params.id) res.send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректное id карточки' });
+      } else {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      }
     });
 };
 
@@ -53,7 +60,11 @@ module.exports.deleteLikeCard = (req, res) => {
     .then((card) => {
       if (card !== null) res.send(card);
     })
-    .catch(() => {
-      res.status(404).send({ message: 'Карточка с лайком не найдена' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректное id карточки' });
+      } else {
+        res.status(404).send({ message: 'Карточка с лайком не найдена' });
+      }
     });
 };

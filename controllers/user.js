@@ -11,16 +11,22 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUser = (req, res) => {
-  User.findById(req.user._id)
+  User.findById(req.params.id || req.user._id)
     .then((user) => {
-      res.send(user);
+      if (user.id === req.params.id || req.user._id) res.send(user);
     })
-    .catch(() => {
-      res.status(400).send({ message: 'Пользователь не найден' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'ID пользователя некорректен' });
+      } else {
+        res.status(404).send({ message: 'Пользователь не найден' });
+      }
     });
 };
 
 module.exports.createUser = (req, res) => {
+  console.log(req.body);
+
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
@@ -34,6 +40,7 @@ module.exports.createUser = (req, res) => {
 
 module.exports.editUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, req.body, {
+    new: true,
     runValidators: true,
   })
     .then((editedUser) => {
@@ -45,7 +52,10 @@ module.exports.editUser = (req, res) => {
 };
 
 module.exports.editAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, req.body, {
+    new: true,
+    runValidators: true,
+  })
     .then((editedAvatar) => {
       res.send(editedAvatar);
     })
