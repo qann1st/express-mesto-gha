@@ -58,13 +58,13 @@ module.exports.deleteLikeCard = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((card) => {
-      if (card !== null) res.send(card);
+      if (card === null) {
+        res.status(404).send({ message: 'Карточка с лайком не найдена' });
+      } else {
+        res.send(card);
+      }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректное id карточки' });
-      } else {
-        res.status(404).send({ message: 'Карточка с лайком не найдена' });
-      }
+      res.status(400).send({ message: 'Некорректное id карточки' });
     });
 };
