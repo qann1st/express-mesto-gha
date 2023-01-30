@@ -6,7 +6,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "start": "node ."
   },
   "author": "",
   "license": "ISC",
