@@ -17,7 +17,7 @@ module.exports.createCard = (req, res) => {
     .then((cards) => {
       res.send(cards);
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(400).send({ message: 'Некорректно заполнены поля' });
     });
 };

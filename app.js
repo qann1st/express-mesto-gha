@@ -8,16 +8,9 @@ const app = express();
 mongoose.set('strictQuery', false);
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use(cors());
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63d63aefa785dc65ab30913d',
-  };
-
-  next();
-});
-
 app.use(express.json());
+app.use(cors());
+
 app.use('/', router);
 
 app.listen('3000', (req, res) => {
