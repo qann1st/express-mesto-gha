@@ -17,7 +17,7 @@ module.exports.createCard = (req, res) => {
       res.send(cards);
     })
     .catch(() => {
-      res.status(500).send({ message: 'Не удалось добавить карточку' });
+      res.status(400).send({ message: 'Некорректно заполнены поля' });
     });
 };
 
@@ -27,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
       res.send(removedCard);
     })
     .catch(() => {
-      res.status(400).send({ message: 'Не удалось удалить карточку' });
+      res.status(404).send({ message: 'Карточка не найдена' });
     });
 };
 
@@ -40,7 +40,7 @@ module.exports.likeCard = (req, res) => {
     .populate('likes owner')
     .then((card) => res.send(card))
     .catch(() => {
-      res.status(400).send({ message: 'Не удалось поставить лайк' });
+      res.status(400).send({ message: 'Карточка не найдена' });
     });
 };
 
@@ -50,8 +50,10 @@ module.exports.deleteLikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true, runValidators: true },
   )
-    .then((card) => res.send(card))
+    .then((card) => {
+      if (card !== null) res.send(card);
+    })
     .catch(() => {
-      res.status(400).send({ message: 'Не удалось убрать лайк' });
+      res.status(404).send({ message: 'Карточка с лайком не найдена' });
     });
 };
