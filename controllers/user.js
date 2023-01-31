@@ -13,9 +13,23 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUser = (req, res) => {
-  User.findById(req.params.id || req.user._id)
+  User.findById(req.params.id)
     .then((user) => {
-      if (user.id === req.params.id || req.user._id) res.send(user);
+      if (user.id === req.params.id) res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'ID пользователя некорректен' });
+      } else {
+        res.status(404).send({ message: 'Пользователь не найден' });
+      }
+    });
+};
+
+module.exports.getNowUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -28,6 +42,10 @@ module.exports.getUser = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
+
+  if (password === null || email === null) {
+    throw res.status(400).send({ message: 'Введенные данные некорректны' });
+  }
 
   bcrypt.hash(password, 10).then((hash) => {
     User.create({
@@ -74,7 +92,7 @@ module.exports.editAvatar = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-  let token = '';
+  let token;
 
   User.findOne({ email })
     .then((user) => {
@@ -82,11 +100,7 @@ module.exports.login = (req, res) => {
         return Promise.reject(new Error('Неправильная почта или пароль'));
       }
 
-      token = jwt.sign(
-        { _id: user._id },
-        'eb28135ebcfc17578f96d4d65b6c7871f2c803be4180c165061d5c2db621c51b ',
-      );
-
+      token = jwt.sign({ _id: user._id }, 'secret-key');
       return bcrypt.compare(password, user.password);
     })
     .then((matched) => {

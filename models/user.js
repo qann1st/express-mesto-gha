@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZTv_zgdMnmfkBCNTRIpnUDXImoMsQaZNdfy4t2Cji0KXRgMLA_doB0-GKPLqaYyqY4pM&usqp=CAU',
+      'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
     type: String,
