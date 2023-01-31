@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: (v) => /^(https?:\/\/)(www.)?[^\s]+(#?)$/i.test(v),
+      message: 'Неправильный формат ссылки',
+    },
   },
   owner: {
     type: Object,

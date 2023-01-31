@@ -41,10 +41,16 @@ module.exports.getNowUser = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar, email, password } = req.body;
+  const { name, about, avatar, email = null, password = null } = req.body;
 
   if (password === null || email === null) {
-    throw res.status(400).send({ message: 'Введенные данные некорректны' });
+    res.status(400).send({ message: 'Введенные данные некорректны' });
+    throw new Error();
+  }
+
+  const checkUser = User.find({ email });
+  if (checkUser !== null) {
+    throw new Error();
   }
 
   bcrypt.hash(password, 10).then((hash) => {

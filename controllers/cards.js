@@ -25,9 +25,13 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Cards.findByIdAndRemove(req.params.id)
     .then((removedCard) => {
-      if (removedCard.id === req.params.id) {
-        res.send(removedCard);
+      if (removedCard === null) {
+        throw new Error();
       }
+      if (removedCard.owner._id !== req.user._id) {
+        throw new Error();
+      }
+      res.send(removedCard);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
