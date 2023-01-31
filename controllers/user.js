@@ -48,11 +48,6 @@ module.exports.createUser = (req, res) => {
     throw new Error();
   }
 
-  const checkUser = User.find({ email });
-  if (checkUser !== null) {
-    throw new Error();
-  }
-
   bcrypt.hash(password, 10).then((hash) => {
     User.create({
       name,
