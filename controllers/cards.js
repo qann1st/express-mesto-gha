@@ -46,7 +46,7 @@ module.exports.deleteCard = (req, res) => {
 module.exports.likeCard = (req, res) => {
   Cards.findByIdAndUpdate(
     req.params.id,
-    { $addToSet: { likes: req.user._id } },
+    { $addToSet: { likes: req.user } },
     { new: true, runValidators: true },
   )
     .populate('likes owner')
@@ -65,7 +65,7 @@ module.exports.likeCard = (req, res) => {
 module.exports.deleteLikeCard = (req, res) => {
   Cards.findByIdAndUpdate(
     req.params.id,
-    { $pull: { likes: req.user._id } },
+    { $pull: { likes: req.user } },
     { new: true, runValidators: true },
   )
     .then((card) => {
@@ -76,7 +76,11 @@ module.exports.deleteLikeCard = (req, res) => {
         res.send(card);
       }
     })
-    .catch(() => {
-      res.status(400).send({ message: 'Некорректное id карточки' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректное id карточки' });
+      } else {
+        res.status(404).send({ message: 'Карточка не существует' });
+      }
     });
 };
