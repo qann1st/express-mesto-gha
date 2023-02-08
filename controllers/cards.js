@@ -29,6 +29,7 @@ module.exports.deleteCard = (req, res) => {
         throw new Error();
       }
       if (removedCard.owner._id !== req.user._id) {
+        res.status(403).send({ message: 'Нельзя удалить чужую карточку' });
         throw new Error();
       }
       res.send(removedCard);

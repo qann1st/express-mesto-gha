@@ -29,7 +29,11 @@ module.exports.getUser = (req, res) => {
 module.exports.getNowUser = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
-      res.send(user);
+      if (user === null) {
+        res.status(404).send({ message: 'Такого пользователя нет' });
+      } else {
+        res.send(user);
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
