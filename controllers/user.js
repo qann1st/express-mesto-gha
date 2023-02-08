@@ -64,7 +64,9 @@ module.exports.createUser = async (req, res) => {
       password: hash,
     })
       .then((user) => {
-        res.send(user);
+        const account = user.toObject();
+        delete account.password;
+        res.send(account);
       })
       .catch(() => {
         res.status(400).send({ message: 'Пользователь уже существует' });
