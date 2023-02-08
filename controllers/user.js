@@ -40,19 +40,22 @@ module.exports.getNowUser = (req, res) => {
     });
 };
 
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar, email = null, password = null } = req.body;
+module.exports.createUser = (req, res, next) => {
+  const { name, about, avatar, email, password = null } = req.body;
+  email.toLowerCase();
 
   if (password === '' || password === undefined || password === null) {
     res.status(400).send({ message: 'Введите пароль' });
     throw new Error();
   }
 
-  const checkUser = User.findOne({ email });
-  if (checkUser) {
-    res.status(409).send({ message: 'Пользователь уже существует' });
-    throw new Error();
-  }
+  User.findOne({ email })
+    .then((user) => user)
+    .then((user) => {
+      if (user !== null) {
+        res.status(409).send({ message: 'Пользователь уже существует' });
+      }
+    });
 
   bcrypt.hash(password, 10).then((hash) => {
     User.create({
