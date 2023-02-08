@@ -43,8 +43,14 @@ module.exports.getNowUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar, email = null, password = null } = req.body;
 
-  if (password === null || email === null) {
-    res.status(400).send({ message: 'Введенные данные некорректны' });
+  if (password === '' || password === undefined || password === null) {
+    res.status(400).send({ message: 'Введите пароль' });
+    throw new Error();
+  }
+
+  const checkUser = User.findOne({ email });
+  if (checkUser) {
+    res.status(409).send({ message: 'Пользователь уже существует' });
     throw new Error();
   }
 
@@ -59,8 +65,12 @@ module.exports.createUser = (req, res) => {
       .then((user) => {
         res.send(user);
       })
-      .catch(() => {
-        res.status(400).send({ message: 'Не удалось создать пользователя' });
+      .catch((err) => {
+        if (err.name === 'CastError') {
+          res.status(400).send({ message: 'Не удалось создать пользователя' });
+        } else {
+          res.status(409).send({ message: 'Пользователь уже существует' });
+        }
       });
   });
 };
@@ -96,6 +106,7 @@ module.exports.login = (req, res) => {
   let token;
 
   User.findOne({ email })
+    .select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильная почта или пароль'));
@@ -113,7 +124,11 @@ module.exports.login = (req, res) => {
         token,
       });
     })
-    .catch(() => {
-      res.status(401).send({ message: 'Не удалось авторизоваться' });
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректно введены данные' });
+      } else {
+        res.status(401).send({ message: 'Не удалось авторизоваться' });
+      }
     });
 };
