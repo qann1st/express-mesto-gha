@@ -46,7 +46,7 @@ module.exports.deleteCard = (req, res) => {
 module.exports.likeCard = (req, res) => {
   Cards.findByIdAndUpdate(
     req.params.id,
-    { $addToSet: { likes: req.user._id } },
+    { $addToSet: { likes: req.user } },
     { new: true, runValidators: true },
   )
     .populate('likes owner')
@@ -65,17 +65,18 @@ module.exports.likeCard = (req, res) => {
 module.exports.deleteLikeCard = (req, res) => {
   Cards.findByIdAndUpdate(
     req.params.id,
-    { $pull: { likes: req.user._id } },
+    { $pull: { likes: req.user } },
     { new: true, runValidators: true },
   )
     .then((card) => {
+      console.log(card.likes);
       if (card === null) {
         res.status(404).send({ message: 'Карточка с лайком не найдена' });
       } else {
         res.send(card);
       }
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(400).send({ message: 'Некорректное id карточки' });
     });
 };
