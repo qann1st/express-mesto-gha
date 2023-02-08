@@ -40,7 +40,7 @@ module.exports.getNowUser = (req, res) => {
     });
 };
 
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password = null } = req.body;
   email.toLowerCase();
 
@@ -49,13 +49,11 @@ module.exports.createUser = (req, res, next) => {
     throw new Error();
   }
 
-  User.findOne({ email })
-    .then((user) => user)
-    .then((user) => {
-      if (user !== null) {
-        res.status(409).send({ message: 'Пользователь уже существует' });
-      }
-    });
+  User.findOne({ email }).then((user) => {
+    if (user !== null) {
+      res.status(409).send({ message: 'Пользователь уже существует' });
+    }
+  });
 
   bcrypt.hash(password, 10).then((hash) => {
     User.create({
@@ -64,17 +62,9 @@ module.exports.createUser = (req, res, next) => {
       avatar,
       email,
       password: hash,
-    })
-      .then((user) => {
-        res.send(user);
-      })
-      .catch((err) => {
-        if (err.name === 'CastError') {
-          res.status(400).send({ message: 'Не удалось создать пользователя' });
-        } else {
-          res.status(409).send({ message: 'Пользователь уже существует' });
-        }
-      });
+    }).then((user) => {
+      res.send(user);
+    });
   });
 };
 
