@@ -15,6 +15,6 @@ app.use(cors());
 app.use('/', router);
 app.use(errors());
 
-app.listen('3050', () => {
+app.listen('3000', () => {
   console.log('Server started');
 });
