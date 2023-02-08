@@ -40,7 +40,7 @@ module.exports.getNowUser = (req, res) => {
     });
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = async (req, res) => {
   const { name, about, avatar, email, password = null } = req.body;
   email.toLowerCase();
 
@@ -62,9 +62,13 @@ module.exports.createUser = (req, res) => {
       avatar,
       email,
       password: hash,
-    }).then((user) => {
-      res.send(user);
-    });
+    })
+      .then((user) => {
+        res.send(user);
+      })
+      .catch(() => {
+        res.status(400).send({ message: 'Пользователь уже существует' });
+      });
   });
 };
 
